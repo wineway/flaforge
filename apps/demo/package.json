@@ -1,0 +1,26 @@
+{
+  "name": "@flaforge/demo",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Flaforge PixiJS demo player and validation harness",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -w sample:assets && vite",
+    "build": "pnpm -w sample:assets && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@flaforge/compiler": "workspace:*",
+    "@flaforge/container": "workspace:*",
+    "@flaforge/ir": "workspace:*",
+    "@flaforge/pixi": "workspace:*",
+    "@flaforge/xml": "workspace:*",
+    "pixi-filters": "^6.1.5",
+    "pixi.js": "^8.23.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.0"
+  }
+}

@@ -1,0 +1,10 @@
+<DOMSymbolItem xmlns="http://ns.adobe.com/xfl/2008/" name="Dot" itemID="fixture-dot-item" symbolType="graphic">
+  <timeline><DOMTimeline name="Dot"><layers><DOMLayer name="Layer 1"><frames>
+    <DOMFrame index="0" duration="10" tweenType="motion" acceleration="0" keyMode="22017">
+      <elements><DOMSymbolInstance libraryItemName="Ball" symbolType="graphic" loop="loop" name="dot"><matrix><Matrix tx="0" ty="0"/></matrix></DOMSymbolInstance></elements>
+    </DOMFrame>
+    <DOMFrame index="10" tweenType="motion" keyMode="22017">
+      <elements><DOMSymbolInstance libraryItemName="Ball" symbolType="graphic" loop="loop" name="dot"><matrix><Matrix tx="100" ty="50"/></matrix></DOMSymbolInstance></elements>
+    </DOMFrame>
+  </frames></DOMLayer></layers></DOMTimeline></timeline>
+</DOMSymbolItem>

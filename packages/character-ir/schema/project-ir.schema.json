@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flaforge.dev/schema/project-ir-1.0.json",
+  "title": "XFL Character IR 1.0",
+  "type": "object",
+  "required": ["irVersion", "meta", "stage", "library", "shapes", "scenes", "assets", "diagnostics"],
+  "properties": {
+    "irVersion": { "const": "1.0" },
+    "meta": {
+      "type": "object",
+      "required": ["source", "generator", "generatedAt"],
+      "properties": {
+        "source": { "type": "string" },
+        "xflVersion": { "type": "string" },
+        "creator": { "type": "string" },
+        "generator": { "type": "string" },
+        "generatedAt": { "type": "string" }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "required": ["width", "height", "frameRate"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "frameRate": { "type": "number", "exclusiveMinimum": 0 },
+        "backgroundColor": { "type": "string" }
+      }
+    },
+    "library": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/character" }
+    },
+    "shapes": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/shape" }
+    },
+    "scenes": { "type": "array", "items": { "$ref": "#/$defs/scene" } },
+    "assets": { "type": "array", "items": { "$ref": "#/$defs/asset" } },
+    "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+  },
+  "$defs": {
+    "vec2": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": { "x": { "type": "number" }, "y": { "type": "number" } }
+    },
+    "rect": {
+      "type": "object",
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      }
+    },
+    "matrix": {
+      "type": "object",
+      "required": ["a", "b", "c", "d", "tx", "ty"],
+      "properties": {
+        "a": { "type": "number" },
+        "b": { "type": "number" },
+        "c": { "type": "number" },
+        "d": { "type": "number" },
+        "tx": { "type": "number" },
+        "ty": { "type": "number" }
+      }
+    },
+    "colorTransform": {
+      "type": "object",
+      "required": ["redMultiplier", "greenMultiplier", "blueMultiplier", "alphaMultiplier", "redOffset", "greenOffset", "blueOffset", "alphaOffset"],
+      "properties": {
+        "redMultiplier": { "type": "number" },
+        "greenMultiplier": { "type": "number" },
+        "blueMultiplier": { "type": "number" },
+        "alphaMultiplier": { "type": "number" },
+        "redOffset": { "type": "number" },
+        "greenOffset": { "type": "number" },
+        "blueOffset": { "type": "number" },
+        "alphaOffset": { "type": "number" }
+      }
+    },
+    "gradientEntry": {
+      "type": "object",
+      "required": ["color", "alpha", "ratio"],
+      "properties": {
+        "color": { "type": "string" },
+        "alpha": { "type": "number" },
+        "ratio": { "type": "number" }
+      }
+    },
+    "fillStyle": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "color", "alpha"],
+          "properties": {
+            "kind": { "const": "solid" },
+            "color": { "type": "string" },
+            "alpha": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "entries", "matrix", "spreadMethod", "interpolationMethod"],
+          "properties": {
+            "kind": { "const": "linear-gradient" },
+            "entries": { "type": "array", "items": { "$ref": "#/$defs/gradientEntry" } },
+            "matrix": { "$ref": "#/$defs/matrix" },
+            "spreadMethod": { "enum": ["pad", "reflect", "repeat"] },
+            "interpolationMethod": { "enum": ["rgb", "linearRGB"] }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "entries", "matrix", "focalPointRatio", "spreadMethod", "interpolationMethod"],
+          "properties": {
+            "kind": { "const": "radial-gradient" },
+            "entries": { "type": "array", "items": { "$ref": "#/$defs/gradientEntry" } },
+            "matrix": { "$ref": "#/$defs/matrix" },
+            "focalPointRatio": { "type": "number" },
+            "spreadMethod": { "enum": ["pad", "reflect", "repeat"] },
+            "interpolationMethod": { "enum": ["rgb", "linearRGB"] }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "assetId", "matrix", "repeat", "smooth", "clipped"],
+          "properties": {
+            "kind": { "const": "bitmap" },
+            "assetId": { "type": "string" },
+            "matrix": { "$ref": "#/$defs/matrix" },
+            "repeat": { "type": "boolean" },
+            "smooth": { "type": "boolean" },
+            "clipped": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "widthMarker": {
+      "type": "object",
+      "required": ["position", "left", "right"],
+      "properties": {
+        "position": { "type": "number" },
+        "left": { "type": "number" },
+        "right": { "type": "number" },
+        "type": { "type": "string" }
+      }
+    },
+    "strokeStyle": {
+      "type": "object",
+      "required": ["kind", "width", "cap", "join", "miterLimit", "scaleMode"],
+      "properties": {
+        "kind": { "enum": ["solid", "dashed", "dotted", "ragged", "hatched", "unsupported"] },
+        "color": { "type": "string" },
+        "alpha": { "type": "number" },
+        "fill": { "$ref": "#/$defs/fillStyle" },
+        "width": { "type": "number" },
+        "cap": { "enum": ["none", "round", "square"] },
+        "join": { "enum": ["round", "bevel", "miter"] },
+        "miterLimit": { "type": "number" },
+        "scaleMode": { "enum": ["normal", "none", "horizontal", "vertical"] },
+        "pixelHinting": { "type": "boolean" },
+        "variableWidth": {
+          "type": "object",
+          "required": ["markers"],
+          "properties": {
+            "markers": { "type": "array", "items": { "$ref": "#/$defs/widthMarker" } }
+          }
+        }
+      }
+    },
+    "segment": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["k", "to"],
+          "properties": { "k": { "const": "L" }, "to": { "$ref": "#/$defs/vec2" } }
+        },
+        {
+          "type": "object",
+          "required": ["k", "c", "to"],
+          "properties": {
+            "k": { "const": "Q" },
+            "c": { "$ref": "#/$defs/vec2" },
+            "to": { "$ref": "#/$defs/vec2" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["k", "c1", "c2", "to"],
+          "properties": {
+            "k": { "const": "C" },
+            "c1": { "$ref": "#/$defs/vec2" },
+            "c2": { "$ref": "#/$defs/vec2" },
+            "to": { "$ref": "#/$defs/vec2" }
+          }
+        }
+      ]
+    },
+    "contour": {
+      "type": "object",
+      "required": ["start", "segments", "closed"],
+      "properties": {
+        "start": { "$ref": "#/$defs/vec2" },
+        "segments": { "type": "array", "items": { "$ref": "#/$defs/segment" } },
+        "closed": { "type": "boolean" }
+      }
+    },
+    "fillRegion": {
+      "type": "object",
+      "required": ["fill", "outer", "holes"],
+      "properties": {
+        "fill": { "type": "integer", "minimum": -1 },
+        "outer": { "$ref": "#/$defs/contour" },
+        "holes": { "type": "array", "items": { "$ref": "#/$defs/contour" } }
+      }
+    },
+    "strokePath": {
+      "type": "object",
+      "required": ["stroke", "start", "segments", "closed"],
+      "properties": {
+        "stroke": { "type": "integer", "minimum": 0 },
+        "start": { "$ref": "#/$defs/vec2" },
+        "segments": { "type": "array", "items": { "$ref": "#/$defs/segment" } },
+        "closed": { "type": "boolean" }
+      }
+    },
+    "shape": {
+      "type": "object",
+      "required": ["id", "bounds", "fills", "strokes", "regions", "strokePaths"],
+      "properties": {
+        "id": { "type": "string" },
+        "bounds": { "$ref": "#/$defs/rect" },
+        "fills": { "type": "array", "items": { "$ref": "#/$defs/fillStyle" } },
+        "strokes": { "type": "array", "items": { "$ref": "#/$defs/strokeStyle" } },
+        "regions": { "type": "array", "items": { "$ref": "#/$defs/fillRegion" } },
+        "strokePaths": { "type": "array", "items": { "$ref": "#/$defs/strokePath" } }
+      }
+    },
+    "filter": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": { "kind": { "type": "string" } }
+    },
+    "text": {
+      "type": "object",
+      "required": ["kind", "text"],
+      "properties": {
+        "kind": { "enum": ["static", "dynamic", "input"] },
+        "text": { "type": "string" },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "fontFamily": { "type": "string" },
+        "fontSize": { "type": "number" },
+        "color": { "type": "string" },
+        "align": { "type": "string" }
+      }
+    },
+    "element": {
+      "type": "object",
+      "required": ["id", "kind", "matrix"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "enum": ["instance", "shape", "group", "bitmap", "text"] },
+        "matrix": { "$ref": "#/$defs/matrix" },
+        "pivot": { "$ref": "#/$defs/vec2" },
+        "colorTransform": { "$ref": "#/$defs/colorTransform" },
+        "blendMode": { "type": "string" },
+        "filters": { "type": "array", "items": { "$ref": "#/$defs/filter" } },
+        "visible": { "type": "boolean" },
+        "cacheAsBitmap": { "type": "boolean" },
+        "characterId": { "type": "string" },
+        "firstFrame": { "type": "integer" },
+        "loopMode": { "enum": ["loop", "play once", "single frame"] },
+        "startFrame": { "type": "integer" },
+        "shapeId": { "type": "string" },
+        "assetId": { "type": "string" },
+        "text": { "$ref": "#/$defs/text" },
+        "rigPropagationMatrix": { "type": "string" }
+      }
+    },
+    "tween": {
+      "type": "object",
+      "required": ["type", "toFrame"],
+      "properties": {
+        "type": { "enum": ["motion", "shape"] },
+        "toFrame": { "type": "integer" },
+        "acceleration": { "type": "number" },
+        "rotate": { "enum": ["auto", "clockwise", "counter-clockwise"] },
+        "rotateTimes": { "type": "integer" },
+        "approximate": { "type": "boolean" }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "required": ["index", "duration", "elements"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "duration": { "type": "integer", "minimum": 1 },
+        "elements": { "type": "array", "items": { "$ref": "#/$defs/element" } },
+        "tween": { "$ref": "#/$defs/tween" },
+        "filters": { "type": "array", "items": { "$ref": "#/$defs/filter" } },
+        "colorTransform": { "$ref": "#/$defs/colorTransform" },
+        "label": { "type": "string" },
+        "script": { "type": "string" },
+        "rigPropagationMatrix": { "type": "string" },
+        "parentIndex": { "type": "integer", "minimum": 0 },
+        "blendMode": { "type": "string" }
+      }
+    },
+    "layer": {
+      "type": "object",
+      "required": ["index", "name", "type", "visible", "frames"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "name": { "type": "string" },
+        "type": { "enum": ["normal", "folder", "mask", "guide"] },
+        "visible": { "type": "boolean" },
+        "parentIndex": { "type": "integer", "minimum": 0 },
+        "riggingIndex": { "type": "integer", "minimum": 0 },
+        "frames": { "type": "array", "items": { "$ref": "#/$defs/frame" } },
+        "color": { "type": "string" }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["id", "name", "frameCount", "layers", "labels"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "frameCount": { "type": "integer", "minimum": 1 },
+        "layers": { "type": "array", "items": { "$ref": "#/$defs/layer" } },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "frame"],
+            "properties": {
+              "name": { "type": "string" },
+              "frame": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "character": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "id", "name", "symbolType", "timeline", "bounds"],
+          "properties": {
+            "kind": { "const": "symbol" },
+            "id": { "type": "string" },
+            "name": { "type": "string" },
+            "symbolType": { "enum": ["graphic", "movieclip", "button"] },
+            "timeline": { "$ref": "#/$defs/timeline" },
+            "bounds": { "$ref": "#/$defs/rect" },
+            "linkage": {
+              "type": "object",
+              "properties": {
+                "exportName": { "type": "string" },
+                "className": { "type": "string" }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "id", "name", "assetId", "width", "height"],
+          "properties": {
+            "kind": { "const": "bitmap" },
+            "id": { "type": "string" },
+            "name": { "type": "string" },
+            "assetId": { "type": "string" },
+            "width": { "type": "number" },
+            "height": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "id", "name", "text"],
+          "properties": {
+            "kind": { "const": "text" },
+            "id": { "type": "string" },
+            "name": { "type": "string" },
+            "text": { "$ref": "#/$defs/text" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "id", "name", "assetId"],
+          "properties": {
+            "kind": { "const": "sound" },
+            "id": { "type": "string" },
+            "name": { "type": "string" },
+            "assetId": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "scene": {
+      "type": "object",
+      "required": ["id", "name", "frameCount", "timeline"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "frameCount": { "type": "integer", "minimum": 1 },
+        "timeline": { "$ref": "#/$defs/timeline" }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "required": ["id", "kind", "name"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "enum": ["bitmap", "sound", "font", "video"] },
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "mimeType": { "type": "string" },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "data": { "type": "string" }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["level", "code", "message"],
+      "properties": {
+        "level": { "enum": ["info", "warn", "error"] },
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "path": { "type": "string" },
+        "detail": { "type": "object" }
+      }
+    }
+  }
+}

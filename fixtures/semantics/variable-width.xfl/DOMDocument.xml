@@ -1,0 +1,4 @@
+<DOMDocument xmlns="http://ns.adobe.com/xfl/2008/" width="200" height="100" frameRate="24">
+  <symbols><Include href="Taper.xml" itemID="fixture-variable-width"/></symbols>
+  <timelines><DOMTimeline name="Scene 1"><layers><DOMLayer name="Layer 1"><frames><DOMFrame index="0"><elements><DOMSymbolInstance libraryItemName="Taper" symbolType="graphic"/></elements></DOMFrame></frames></DOMLayer></layers></DOMTimeline></timelines>
+</DOMDocument>

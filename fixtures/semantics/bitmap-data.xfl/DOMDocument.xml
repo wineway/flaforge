@@ -1,0 +1,13 @@
+<DOMDocument xmlns="http://ns.adobe.com/xfl/2008/" width="200" height="100" frameRate="24">
+  <media>
+    <DOMBitmapItem name="Face" itemID="fixture-face-bitmap" href="Face.png" bitmapDataHRef="M 1.fixture.dat" frameRight="200" frameBottom="100"/>
+  </media>
+  <symbols>
+    <Include href="FaceSymbol.xml" itemID="fixture-face-symbol"/>
+  </symbols>
+  <timelines>
+    <DOMTimeline name="Scene 1"><layers><DOMLayer name="Layer 1"><frames><DOMFrame index="0" duration="1">
+      <elements><DOMSymbolInstance libraryItemName="FaceSymbol" symbolType="graphic"/></elements>
+    </DOMFrame></frames></DOMLayer></layers></DOMTimeline>
+  </timelines>
+</DOMDocument>

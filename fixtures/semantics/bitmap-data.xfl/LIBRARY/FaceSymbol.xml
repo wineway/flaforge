@@ -1,0 +1,5 @@
+<DOMSymbolItem xmlns="http://ns.adobe.com/xfl/2008/" name="FaceSymbol" itemID="fixture-face-symbol-item" symbolType="graphic">
+  <timeline><DOMTimeline name="FaceSymbol"><layers><DOMLayer name="Layer 1"><frames><DOMFrame index="0">
+    <elements><DOMBitmapInstance libraryItemName="Face"/></elements>
+  </DOMFrame></frames></DOMLayer></layers></DOMTimeline></timeline>
+</DOMSymbolItem>

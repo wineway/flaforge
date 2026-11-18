@@ -1,0 +1,41 @@
+{
+  "name": "flaforge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "pnpm@9.2.0",
+  "description": "Flaforge turns Adobe Animate FLA/XFL projects into an engine-agnostic Character IR and plays it with PixiJS v8",
+  "scripts": {
+    "build": "pnpm -r --if-present build",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "xfl2ir": "tsx packages/cli/src/index.ts xfl2ir",
+    "xfl2svg": "tsx packages/cli/src/index.ts xfl2svg",
+    "ir-validate": "tsx packages/cli/src/index.ts ir-validate",
+    "ir-bake": "tsx packages/cli/src/index.ts ir-bake",
+    "sample:assets": "tsx scripts/build-demo-assets.ts",
+    "sample:ir": "tsx packages/cli/src/index.ts xfl2ir fixtures/semantics/motion-tween.xfl -o out/sample.ir.json",
+    "sample:svg": "tsx packages/cli/src/index.ts xfl2svg fixtures/semantics/motion-tween.xfl -o out/sample.svg --frame 5",
+    "demo": "pnpm --filter @flaforge/demo dev",
+    "demo:build": "pnpm --filter @flaforge/demo build",
+    "e2e": "node scripts/e2e-demo.mjs",
+    "check": "pnpm typecheck && pnpm test",
+    "release:check": "pnpm check && pnpm demo:build"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/pngjs": "^6.0.5",
+    "ajv": "^8.17.1",
+    "playwright": "^1.65.1",
+    "pngjs": "^7.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "yaml": "^2.9.1"
+  }
+}

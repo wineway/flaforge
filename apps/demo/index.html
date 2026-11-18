@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flaforge · XFL → Character IR → PixiJS</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <aside class="panel">
+        <header>
+          <h1>Flaforge</h1>
+          <p class="subtitle">Adobe Animate → Character IR → PixiJS v8</p>
+        </header>
+
+        <section class="stats" id="stats">
+          <div><span>Stage</span><strong id="stage-size">—</strong></div>
+          <div><span>FPS</span><strong id="fps">—</strong></div>
+          <div><span>Symbols</span><strong id="symbol-count">—</strong></div>
+          <div><span>Shapes</span><strong id="shape-count">—</strong></div>
+          <div><span>Frames</span><strong id="frame-count">—</strong></div>
+          <div><span>Diagnostics</span><strong id="diagnostic-count">—</strong></div>
+        </section>
+
+        <section class="controls">
+          <label for="scene">Scene</label>
+          <select id="scene"></select>
+
+          <label for="frame">Frame</label>
+          <div class="frame-row">
+            <input id="frame" type="range" min="0" max="0" value="0" />
+            <output id="frame-label">0</output>
+          </div>
+
+          <div class="button-row">
+            <button id="play" type="button">Play</button>
+            <button id="prev" type="button" title="Previous frame">◀</button>
+            <button id="next" type="button" title="Next frame">▶</button>
+          </div>
+
+          <label for="zoom">Zoom</label>
+          <input id="zoom" type="range" min="0.2" max="3" step="0.05" value="1" />
+
+          <div class="button-row">
+            <button id="fit" type="button">Fit</button>
+            <button id="diagnostics" type="button">Diagnostics</button>
+          </div>
+        </section>
+
+      </aside>
+
+      <main class="viewport">
+        <canvas id="canvas"></canvas>
+        <div id="overlay" class="overlay" hidden></div>
+        <div id="diagnostics-panel" class="diagnostics" hidden>
+          <header><strong>Diagnostics</strong><button id="close-diagnostics" type="button">×</button></header>
+          <ul id="diagnostics-list"></ul>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

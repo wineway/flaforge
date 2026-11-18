@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Typecheck, tests and production demo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm release:check
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Smoke test the demo under a subpath
+        run: |
+          mkdir -p "$RUNNER_TEMP/flaforge-preview"
+          cp -R apps/demo/dist "$RUNNER_TEMP/flaforge-preview/demo"
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$RUNNER_TEMP/flaforge-preview" &
+          trap 'kill "$!"' EXIT
+          curl --fail --silent --retry 10 --retry-connrefused http://127.0.0.1:4173/demo/ > /dev/null
+          DEMO_URL=http://127.0.0.1:4173/demo/ pnpm e2e
+      - uses: actions/upload-artifact@v4
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          name: flaforge-demo
+          path: apps/demo/dist
+          if-no-files-found: error

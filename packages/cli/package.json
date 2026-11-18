@@ -1,0 +1,24 @@
+{
+  "name": "@flaforge/cli",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Flaforge command-line interface: xfl2ir, xfl2svg, ir-validate, ir-bake",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "bin": {
+    "flaforge": "./src/index.ts",
+    "xfl2ir": "./src/index.ts"
+  },
+  "dependencies": {
+    "@flaforge/compiler": "workspace:*",
+    "@flaforge/container": "workspace:*",
+    "@flaforge/ir": "workspace:*",
+    "@flaforge/xml": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit"
+  }
+}

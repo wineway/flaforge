@@ -1,0 +1,8 @@
+<DOMSymbolItem xmlns="http://ns.adobe.com/xfl/2008/" name="Ball" itemID="fixture-ball-item" symbolType="graphic">
+  <timeline><DOMTimeline name="Ball"><layers><DOMLayer name="Layer 1"><frames><DOMFrame index="0"><elements>
+    <DOMShape>
+      <fills><FillStyle index="1"><SolidColor color="#3366FF"/></FillStyle></fills>
+      <edges><Edge fillStyle1="1" edges="!0 0|100 0|100 100|0 100|0 0"/></edges>
+    </DOMShape>
+  </elements></DOMFrame></frames></DOMLayer></layers></DOMTimeline></timeline>
+</DOMSymbolItem>
