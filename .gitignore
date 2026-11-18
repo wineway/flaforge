@@ -1,0 +1,20 @@
+node_modules/
+dist/
+out/
+coverage/
+*.log
+*.tsbuildinfo
+.DS_Store
+
+# pnpm virtual store created when the repo lives on a separate filesystem
+.pnpm-store/
+
+# Local scratch/cache (batch material index, probe renders)
+.work/
+
+# Generated demo data and optional local validation inputs
+/apps/demo/src/generated/
+/apps/demo/public/
+*.fla
+/docs/assets/*.png
+/docs/assets/*.webp
